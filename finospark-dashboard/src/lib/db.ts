@@ -137,6 +137,40 @@ export async function getRecentRewards(userId: string, limit = 10) {
   return db.all(`SELECT * FROM rewards WHERE userId = ? ORDER BY createdAt DESC LIMIT ?`, [userId, limit]);
 }
 
+export async function getTotalCoins(userId: string) {
+  const db = await getDb();
+  const result = await db.get(`SELECT COALESCE(SUM(points), 0) as total FROM rewards WHERE userId = ?`, [userId]);
+  return result?.total ?? 0;
+}
+
+export async function hasDailyCheckInToday(userId: string) {
+  const db = await getDb();
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const todayStart = today.toISOString();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowStart = tomorrow.toISOString();
+  const result = await db.get(
+    `SELECT 1 FROM rewards WHERE userId = ? AND description LIKE 'Daily check-in%' AND createdAt >= ? AND createdAt < ? LIMIT 1`,
+    [userId, todayStart, tomorrowStart]
+  );
+  return !!result;
+}
+
+export async function hasWeeklySavingsRewardThisWeek(userId: string) {
+  const db = await getDb();
+  const now = new Date();
+  const startOfWeek = new Date(now);
+  startOfWeek.setDate(now.getDate() - now.getDay());
+  startOfWeek.setHours(0, 0, 0, 0);
+  const result = await db.get(
+    `SELECT 1 FROM rewards WHERE userId = ? AND description LIKE 'Weekly savings%' AND createdAt >= ? LIMIT 1`,
+    [userId, startOfWeek.toISOString()]
+  );
+  return !!result;
+}
+
 // Transaction helpers
 export interface TransactionInsert {
   userId: string; amount: number; type: 'credit'|'debit'; category: string; description?: string | null; timestamp?: Date; label?: string | null; note?: string | null; timeframe?: 'week'|'month'|'year' | null; tags?: string[]; source?: 'system'|'manual'|'ai' | null;

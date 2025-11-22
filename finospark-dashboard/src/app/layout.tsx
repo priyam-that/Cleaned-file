@@ -3,6 +3,7 @@ import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
 
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-geist-sans",
@@ -30,9 +31,10 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${jetBrains.variable} bg-[#050505] antialiased`}
       >
-        <div className="min-h-screen bg-[#050505] text-white">
+        <div className="flex min-h-screen flex-col bg-[#050505] text-white">
           <Navbar />
-          <main>{children}</main>
+          <main className="flex-1">{children}</main>
+          <Footer />
         </div>
       </body>
     </html>
