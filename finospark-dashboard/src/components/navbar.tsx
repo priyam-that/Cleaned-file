@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { Coins } from "lucide-react";
 
 const items = [
   { href: "/", label: "Home" },
@@ -16,6 +17,7 @@ type SessionSummary = {
   name: string;
   email: string;
   username?: string;
+  coins?: number;
 };
 
 function isActiveRoute(pathname: string, href: string) {
@@ -28,18 +30,41 @@ export function Navbar() {
   const router = useRouter();
   const [sessionUser, setSessionUser] = useState<SessionSummary | null>(null);
   const [sessionResolved, setSessionResolved] = useState(false);
+  const [coins, setCoins] = useState<number>(0);
 
   useEffect(() => {
     let cancelled = false;
+    
+    // Fetch session and coins
     fetch("/api/auth/session")
       .then((res) => res.json())
       .then((data) => {
         if (!cancelled) {
           setSessionUser(data.user);
+          setCoins(data.coins || 0);
+          
+          // Auto check-in when user opens the app
+          if (data.user) {
+            fetch("/api/rewards/check-in", { method: "POST" })
+              .then((res) => res.json())
+              .then((result) => {
+                if (!cancelled && result.success) {
+                  setCoins(result.coins);
+                } else if (!cancelled && result.coins !== undefined) {
+                  setCoins(result.coins);
+                }
+              })
+              .catch(() => {
+                // Silently fail check-in if there's an error
+              });
+          }
         }
       })
       .catch(() => {
-        if (!cancelled) setSessionUser(null);
+        if (!cancelled) {
+          setSessionUser(null);
+          setCoins(0);
+        }
       })
       .finally(() => {
         if (!cancelled) setSessionResolved(true);
@@ -52,6 +77,7 @@ export function Navbar() {
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
     setSessionUser(null);
+    setCoins(0);
     router.refresh();
   };
 
@@ -103,7 +129,12 @@ export function Navbar() {
                 <span className="font-semibold text-white">
                   {sessionUser.name}
                 </span>
-                <span className="text-white/60">{sessionUser.email}</span>
+                {/*<span className="text-white/60">{sessionUser.email}</span> */}
+                <span className="mt-1 flex items-center gap-1 text-[#2CFF75]">
+                  <Coins className="size-3" />
+                  <span className="font-semibold">{coins.toLocaleString()}</span>
+                  <span className="text-[10px] text-white/60">coins</span>
+                </span>
               </span>
               <button
                 type="button"
