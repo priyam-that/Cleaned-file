@@ -10,6 +10,7 @@ export default async function InsightsPage() {
         <p className="text-xs uppercase tracking-[0.3em] text-white/60">
           Live spending intelligence
         </p>
+        
         <h1 className="text-4xl font-semibold">Insights workspace</h1>
         <p className="text-white/70">
           Track daily, weekly, and monthly movement, tweak the filters, and let
