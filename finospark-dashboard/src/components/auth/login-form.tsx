@@ -28,9 +28,24 @@ export function LoginForm() {
         body: JSON.stringify({ identifier, password }),
       });
 
-      const data = await response.json();
+      const text = await response.text();
+      let data: Record<string, unknown> | null = null;
+      if (text) {
+        try {
+          data = JSON.parse(text);
+        } catch {
+          data = null;
+        }
+      }
       if (!response.ok) {
-        throw new Error(data.error ?? "Unable to sign in.");
+        let errorMessage = "Unable to sign in.";
+        if (typeof data === "object" && data && "error" in data) {
+          const errorValue = (data as { error?: unknown }).error;
+          if (typeof errorValue === "string" && errorValue.trim()) {
+            errorMessage = errorValue;
+          }
+        }
+        throw new Error(errorMessage);
       }
 
       router.push("/");
