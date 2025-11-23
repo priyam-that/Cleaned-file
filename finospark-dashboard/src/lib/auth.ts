@@ -15,6 +15,14 @@ import {
 const SESSION_COOKIE_NAME = "finospark_session";
 const SESSION_MAX_AGE_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
 
+function tryDeleteSessionCookie(cookieStore: Awaited<ReturnType<typeof cookies>>) {
+  try {
+    cookieStore.delete(SESSION_COOKIE_NAME);
+  } catch (_error) {
+    // Ignore when cookies are read-only, such as during SSR render.
+  }
+}
+
 export type SessionUser = {
   id: string;
   username: string;
@@ -85,7 +93,7 @@ export async function destroySession() {
   if (!token) return;
 
   await deleteSessionByToken(token);
-  cookieStore.delete(SESSION_COOKIE_NAME);
+  tryDeleteSessionCookie(cookieStore);
 }
 
 export async function createSession(userId: string) {
@@ -102,14 +110,14 @@ export async function getCurrentSession() {
   const session = await getSessionWithUser(token);
 
   if (!session) {
-    cookieStore.delete(SESSION_COOKIE_NAME);
+    tryDeleteSessionCookie(cookieStore);
     return null;
   }
 
   const expires = new Date(session.expiresAt);
   if (expires.getTime() < Date.now()) {
     await deleteSessionByToken(token);
-    cookieStore.delete(SESSION_COOKIE_NAME);
+    tryDeleteSessionCookie(cookieStore);
     return null;
   }
 
