@@ -48,7 +48,7 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
                     className={`flex items-center gap-1 border-0 ${
                       txn.type === "debit"
                         ? "bg-[#2CFF75]/10 text-[#2CFF75]"
-                        : "bg-white/10 text-white"
+                        : "bg-[#FF6F6F]/10 text-[#FF6F6F]"
                     }`}
                   >
                     {txn.type === "debit" ? (
