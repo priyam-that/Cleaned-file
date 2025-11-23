@@ -24,6 +24,7 @@ Structure the answer with three concise bullets:
 1. Top spend categories (+ % share estimate)
 2. Behavior shifts versus last period
 3. One actionable idea in neon-optimistic tone
+Express every monetary amount in Indian Rupees (₹) with en-IN digit grouping—never mention dollars.
 `;
 
     if (canUseGemini()) {

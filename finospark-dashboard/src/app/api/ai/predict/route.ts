@@ -26,6 +26,7 @@ Provide:
 - Categories likely to surge
 - Risk factors to watch
 - Two micro-habits that keep spending aligned with goals
+Always format money as Indian Rupees (₹) with en-IN digit grouping—never use dollars.
 `;
 
     if (canUseGemini()) {

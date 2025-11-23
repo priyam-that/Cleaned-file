@@ -28,6 +28,7 @@ User profile (optional): ${profile ? JSON.stringify(profile, null, 2) : "N/A"}
 
 Respond with concise, confidence-inspiring advice.
 Use bold headers, short sentences, and end with a single motivating mantra.
+Always express money in Indian Rupees (₹) with en-IN digit grouping—never use dollars.
 `;
 
     if (canUseGemini()) {

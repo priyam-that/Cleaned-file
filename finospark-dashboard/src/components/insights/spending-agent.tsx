@@ -4,6 +4,7 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { formatInr } from "@/lib/utils";
 
 export type SpendingPeriod = "week" | "month" | "year";
 
@@ -137,23 +138,23 @@ export function SpendingAgentPanel(props: SpendingAgentPanelProps) {
       <div className="grid grid-cols-2 gap-3 text-sm">
         <div className="space-y-1">
           <div className="text-muted-foreground">Credited</div>
-          <div className="font-medium">{formatCurrency(result.credited)}</div>
+          <div className="font-medium">{formatInr(result.credited)}</div>
         </div>
         <div className="space-y-1">
           <div className="text-muted-foreground">Debited</div>
-          <div className="font-medium">{formatCurrency(result.debited)}</div>
+          <div className="font-medium">{formatInr(result.debited)}</div>
         </div>
         <div className="space-y-1">
           <div className="text-muted-foreground">Due</div>
-          <div className="font-medium">{formatCurrency(result.due)}</div>
+          <div className="font-medium">{formatInr(result.due)}</div>
         </div>
         <div className="space-y-1">
           <div className="text-muted-foreground">Effective Spend</div>
-          <div className="font-medium">{formatCurrency(result.effectiveSpend)}</div>
+          <div className="font-medium">{formatInr(result.effectiveSpend)}</div>
         </div>
         <div className="space-y-1">
           <div className="text-muted-foreground">Total Balance</div>
-          <div className="font-medium">{formatCurrency(result.totalBalance)}</div>
+          <div className="font-medium">{formatInr(result.totalBalance)}</div>
         </div>
         <div className="space-y-1">
           <div className="text-muted-foreground">Period</div>
@@ -171,13 +172,4 @@ export function SpendingAgentPanel(props: SpendingAgentPanelProps) {
     </Card>
   );
 }
-
-function formatCurrency(n: number): string {
-  try {
-    return new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(n);
-  } catch {
-    return `$${n.toFixed(2)}`;
-  }
-}
-
 export default SpendingAgentPanel;
