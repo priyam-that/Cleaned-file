@@ -62,13 +62,13 @@ export const mockUserProfile: UserProfile = {
   rewards: [
     {
       id: "reward-001",
-      points: 540,
+      points: 10,
       description: "Cashback from eco-spend",
       createdAt: new Date().toISOString(),
     },
     {
       id: "reward-002",
-      points: 220,
+      points: 0,
       description: "Streak bonus",
       createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
     },
