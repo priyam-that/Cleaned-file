@@ -46,15 +46,15 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
                 <td className="py-3">
                   <Badge
                     className={`flex items-center gap-1 border-0 ${
-                      txn.type === "debit"
+                      txn.type === "credit"
                         ? "bg-[#2CFF75]/10 text-[#2CFF75]"
                         : "bg-[#FF6F6F]/10 text-[#FF6F6F]"
                     }`}
                   >
-                    {txn.type === "debit" ? (
-                      <ArrowDownRight className="size-3" />
-                    ) : (
+                    {txn.type === "credit" ? (
                       <ArrowUpRight className="size-3" />
+                    ) : (
+                      <ArrowDownRight className="size-3" />
                     )}
                     {typeLabel[txn.type]}
                   </Badge>
